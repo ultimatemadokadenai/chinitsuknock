@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>清一色生成</title>
+    <style>
+        .tile {
+            height: 50px;
+            width: auto;
+            margin: 5px;
+            border: 2px solid transparent;
+            transition: filter 0.2s, border-color 0.2s;
+        }
+
+        .tile.selected {
+            filter: brightness(50%);
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>ランダム清一色生成</h1>
+
+    <form method="get" action="{% url 'index' %}">
+        <button type="submit">戻る</button>
+    </form>
+
+    <h2>手牌:</h2>
+    <div>
+        {% for tile in hand %}
+            <img src="/images/{{ tile }}m.png" alt="{{ tile }}m" class="tile">
+        {% endfor %}
+    </div>
+
+    <h2>待ち牌クイズ:</h2>
+    <div id="quiz-tiles">
+        {% for i in "123456789" %}
+            <img src="/images/{{ i }}m.png" alt="{{ i }}m" class="tile selectable" data-value="{{ i }}">
+        {% endfor %}
+    </div>
+
+    <form method="get" action="{% url 'single_mode' %}">
+        <button type="submit">生成</button>
+    </form>
+    
+    <button id="submit-answer">回答する</button>
+
+    <div id="result"></div>
+
+    <script>
+        const selectedTiles = new Set();
+
+        document.querySelectorAll('.tile.selectable').forEach(tile => {
+            tile.addEventListener('click', () => {
+                const val = tile.dataset.value;
+                if (selectedTiles.has(val)) {
+                    selectedTiles.delete(val);
+                    tile.classList.remove('selected');
+                } else {
+                    selectedTiles.add(val);
+                    tile.classList.add('selected');
+                }
+            });
+        });
+
+        document.getElementById('submit-answer').addEventListener('click', () => {
+            fetch("{% url 'check_answer' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ selected: Array.from(selectedTiles) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = data.correct
+                    ? "<p style='color:green;'>正解！</p>"
+                    : `<p style='color:red;'>不正解。正解: ${data.answer.join(', ')}m</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

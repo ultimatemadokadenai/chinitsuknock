@@ -1,0 +1,8 @@
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="room_id" placeholder="ルーム番号を入力" required>
+    <button type="submit">入室</button>
+</form>

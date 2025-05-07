@@ -1,0 +1,13 @@
+<h1>ルーム番号: {{ room_id }}</h1>
+<h2>参加者</h2>
+<ul>
+    {% for player in players %}
+        <li>{{ player }}</li>
+    {% endfor %}
+</ul>
+{% if is_host %}
+    <form method="post" action="{% url 'start_game' room_id=room_id %}">
+        {% csrf_token %}
+        <button type="submit">ゲーム開始</button>
+    </form>
+{% endif %}

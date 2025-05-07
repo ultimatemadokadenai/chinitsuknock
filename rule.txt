@@ -5,3 +5,75 @@ djangoを用いて簡易的な麻雀ゲーム対戦サイト「chinitsu knock」
 4.対戦機能を実装
 おおまかな流れは以下の通りです。
 
+待ち判定に関しては以下のサイトを参照
+https://www.tenkaichi-hanseikai.com/entry/2022/06/17/130508
+
+待ちの判定にはmahjongライブラリを使用します。
+mahjongライブラリに現在の牌姿を投げることで点数が帰ってきた場合を和了とします。
+
+以下が例のコード
+
+# アガリ形(man=マンズ, pin=ピンズ, sou=ソーズ, honors=字牌)
+tiles = TilesConverter.string_to_136_array(man='234555', pin='555', sou='22555')
+
+# アガリ牌(ソーズの5)
+win_tile = TilesConverter.string_to_136_array(sou='5')[0]
+
+# 鳴き(なし)
+melds = None
+
+# ドラ(なし)
+dora_indicators = None
+
+# オプション(なし)
+config = None
+
+# 計算
+result = calculator.estimate_hand_value(tiles, win_tile, melds, dora_indicators, config)
+print_hand_result(result)
+
+結果出力
+>3 40
+5200 0
+[Tanyao, Sanshoku Doukou]
+{'fu': 30, 'reason': 'base'} #メンゼンロン
+{'fu': 4, 'reason': 'closed_pon'} #暗刻
+{'fu': 4, 'reason': 'closed_pon'} #暗刻
+{'fu': 2, 'reason': 'open_pon'} #明刻
+
+上がり形を萬子のみにし、投げる牌も萬子で統一します。
+ようするに下です。
+
+tiles = TilesConverter.string_to_136_array(man='生成した手牌+上がり牌')
+
+# アガリ牌(ソーズの5)
+win_tile = TilesConverter.string_to_136_array(man='萬子の1から9を全て入れ返答が返ってくるかテスト')[0]
+
+# 鳴き(なし)
+melds = None
+
+# ドラ(なし)
+dora_indicators = None
+
+# オプション(なし)
+config = None
+
+# 計算
+result = calculator.estimate_hand_value(tiles, win_tile, melds, dora_indicators, config)
+print_hand_result(result)
+
+待ちをクイズ形式にしましょう。
+123456789の画像を手牌の下にも置きます。
+何か分かるように枠で囲います。
+一回クリックしたら暗転、もう一度クリックで元に戻るようにします。
+その下に回答ボタンを作成します。
+選んだ牌を全て暗転させ、回答を押します。
+こちらで計算した待ち牌とすべて合っていれば〇を表示し、間違っていれば正解を表示します。
+
+
+次はサーバーとクライアントを設定します。
+クライアント側がwebアプリにアクセスし、マルチプレイを選択します。
+マルチプレイが選択されたらサーバー側でこの計算を行い、
+クライアント側から部屋を作成しホスト出来るようにします。
+ホストにサーバー側から部屋番号を提供し、その番号を入力して同じ部屋で
+

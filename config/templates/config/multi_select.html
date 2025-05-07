@@ -1,0 +1,10 @@
+<h2>マルチプレイを選択</h2>
+
+<form method="post" action="{% url 'host_create' %}">
+    {% csrf_token %}
+    <button type="submit">ホスト</button>
+</form>
+
+<form method="get" action="{% url 'join_room' %}">
+    <button type="submit">入室</button>
+</form>

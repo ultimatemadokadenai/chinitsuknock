@@ -1,0 +1,16 @@
+<!-- templates/config/enter_name.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>名前を入力</title>
+</head>
+<body>
+    <h1>清一色ノック</h1>
+    <form method="post" action="{% url 'set_name' %}">
+        {% csrf_token %}
+        <label for="player_name">あなたの名前:</label>
+        <input type="text" name="player_name" id="player_name" required>
+        <button type="submit">ゲームを始める</button>
+    </form>
+</body>
+</html>

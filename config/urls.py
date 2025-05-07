@@ -16,7 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.enter_name, name='enter_name'), 
+    path('home', views.index, name='index'),
+    path('check_answer/', views.check_answer, name='check_answer'),
+    path('set_name/', views.set_name, name='set_name'),
+    path('single/', views.single_mode, name='single_mode'),
+    path('multi/', views.multi_select, name='multi_select'),
+    path('multi/host/', views.host_room, name='host_room'),
+    path('multi/host/create/', views.host_create, name='host_create'),
+    path('multi/join/', views.join_room, name='join_room'),
+    path('host_room/', views.host_room, name='host_room'),
+    path('join_room/', views.join_room, name='join_room'),
+    path('room/<str:room_id>/', views.room_detail, name='room_detail'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static('/images/', document_root='images/')
