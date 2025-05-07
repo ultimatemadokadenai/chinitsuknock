@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-jqpb1d=#!lh5kym&1sl3ofbsygg8-f_+55m)lvsp4(wo@2q_gi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://chinitsuknock.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'chinitsuknock.onrender.com']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
